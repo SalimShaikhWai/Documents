@@ -1,0 +1,534 @@
+C# Multithreading
+Multithreading in C# is a process in which multiple threads work simultaneously. It is a process to achieve multitasking. It saves time because multiple tasks are being executed at a time. To create multithreaded application in C#, we need to use System.Threding namespace.
+
+System.Threading Namespace
+The System.Threading namespace contains classes and interfaces to provide the facility of multithreaded programming. It also provides classes to synchronize the thread resource. A list of commonly used classes are given below:
+
+Thread
+Mutex
+Timer
+Monitor
+Semaphore
+ThreadLocal
+ThreadPool
+Volatile etc.
+Process and Thread
+A process represents an application whereas a thread represents a module of the application. Process is heavyweight component whereas thread is lightweight. A thread can be termed as lightweight subprocess because it is executed inside a process.
+
+Whenever you create a process, a separate memory area is occupied. But threads share a common memory area.
+
+* C# Thread Life Cycle*
+
+
+
+In C#, each thread has a life cycle. The life cycle of a thread is started when instance of System.Threading.Thread class is created. When the task execution of the thread is completed, its life cycle is ended.
+
+There are following states in the life cycle of a Thread in C#.
+
+Unstarted
+Runnable (Ready to run)
+Running
+Not Runnable
+Dead (Terminated)
+Unstarted State
+When the instance of Thread class is created, it is in unstarted state by default.
+
+Runnable State
+When start() method on the thread is called, it is in runnable or ready to run state.
+
+
+
+Running State
+Only one thread within a process can be executed at a time. At the time of execution, thread is in running state.
+
+Not Runnable State
+The thread is in not runnable state, if sleep() or wait() method is called on the thread, or input/output operation is blocked.
+
+Dead State
+After completing the task, thread enters into dead or terminated state.
+
+
+
+
+
+
+C# Thread class
+C# Thread class provides properties and methods to create and control threads. It is found in System.Threading namespace.
+
+C# Thread Properties
+A list of important properties of Thread class are given below:
+
+Property	Description
+CurrentThread	returns the instance of currently running thread.
+IsAlive	checks whether the current thread is alive or not. It is used to find the execution status of the thread.
+IsBackground	is used to get or set value whether current thread is in background or not.
+ManagedThreadId	is used to get unique id for the current managed thread.
+Name	is used to get or set the name of the current thread.
+Priority	is used to get or set the priority of the current thread.
+ThreadState	is used to return a value representing the thread state.
+C# Thread Methods
+A list of important methods of Thread class are given below:
+
+Method	Description
+Abort()	is used to terminate the thread. It raises ThreadAbortException.
+Interrupt()	is used to interrupt a thread which is in WaitSleepJoin state.
+Join()	is used to block all the calling threads until this thread terminates.
+ResetAbort()	is used to cancel the Abort request for the current thread.
+Resume()	is used to resume the suspended thread. It is obselete.
+Sleep(Int32)	is used to suspend the current thread for the specified milliseconds.
+Start()	changes the current state of the thread to Runnable.
+Suspend()	suspends the current thread if it is not suspended. It is obselete.
+Yield()	is used to yield the execution of current thread to another thread.
+
+
+
+
+
+C# Threading Example: static method
+We can call static and non-static methods on the execution of the thread. To call the static and non-static methods, you need to pass method name in the constructor of ThreadStart class. For static method, we don't need to create the instance of the class. You can refer it by the name of class.
+
+using System;  
+using System.Threading;  
+public class MyThread  
+{  
+    public static void Thread1()  
+    {  
+        for (int i = 0; i < 10; i++)  
+        {  
+            Console.WriteLine(i);  
+        }  
+    }  
+}  
+public class ThreadExample  
+{  
+    public static void Main()  
+    {  
+        Thread t1 = new Thread(new ThreadStart(MyThread.Thread1));  
+        Thread t2 = new Thread(new ThreadStart(MyThread.Thread1));  
+        t1.Start();  
+        t2.Start();  
+    }  
+}  
+Output:
+
+The output of the above program can be anything because there is context switching between the threads.
+
+0
+1
+2
+3
+4
+5
+0
+1
+2
+3
+4
+5
+6
+7
+8
+9
+6
+7
+8
+9
+C# Threading Example: non-static method
+For non-static method, you need to create instance of the class so that you can refer it in the constructor of ThreadStart class.
+
+
+
+using System;  
+using System.Threading;  
+public class MyThread  
+{  
+    public void Thread1()  
+    {  
+        for (int i = 0; i < 10; i++)  
+        {  
+            Console.WriteLine(i);  
+        }  
+    }  
+}  
+public class ThreadExample  
+{  
+    public static void Main()  
+    {  
+        MyThread mt = new MyThread();  
+        Thread t1 = new Thread(new ThreadStart(mt.Thread1));  
+        Thread t2 = new Thread(new ThreadStart(mt.Thread1));  
+        t1.Start();  
+        t2.Start();  
+    }  
+}  
+Output:
+
+Like above program output, the output of this program can be anything because there is context switching between the threads.
+
+0
+1
+2
+3
+4
+5
+0
+1
+2
+3
+4
+5
+6
+7
+8
+9
+6
+7
+8
+9
+C# Threading Example: performing different tasks on each thread
+Let's see an example where we are executing different methods on each thread.
+
+using System;  
+using System.Threading;  
+  
+public class MyThread  
+{  
+    public static void Thread1()  
+    {  
+        Console.WriteLine("task one");  
+    }  
+    public static void Thread2()  
+    {  
+        Console.WriteLine("task two");  
+    }  
+}  
+public class ThreadExample  
+{  
+    public static void Main()  
+    {  
+        Thread t1 = new Thread(new ThreadStart(MyThread.Thread1));  
+        Thread t2 = new Thread(new ThreadStart(MyThread.Thread2));  
+        t1.Start();  
+        t2.Start();  
+    }  
+}  
+
+
+
+C# Threading Example: Sleep() method
+The Sleep() method suspends the current thread for the specified milliseconds. So, other threads get the chance to start execution.
+
+using System;  
+using System.Threading;  
+public class MyThread  
+{  
+    public void Thread1()  
+    {  
+        for (int i = 0; i < 10; i++)  
+        {  
+            Console.WriteLine(i);  
+            Thread.Sleep(200);  
+        }  
+    }  
+}  
+public class ThreadExample  
+{  
+    public static void Main()  
+    {  
+        MyThread mt = new MyThread();  
+        Thread t1 = new Thread(new ThreadStart(mt.Thread1));  
+        Thread t2 = new Thread(new ThreadStart(mt.Thread1));  
+        t1.Start();  
+        t2.Start();  
+    }  
+}  
+
+
+
+C# Threading Example: Abort() method
+The Abort() method is used to terminate the thread. It raises ThreadAbortException if Abort operation is not done.
+
+using System;  
+using System.Threading;  
+public class MyThread  
+{  
+    public void Thread1()  
+    {  
+        for (int i = 0; i < 10; i++)  
+        {  
+            Console.WriteLine(i);  
+            Thread.Sleep(200);  
+        }  
+    }  
+}  
+public class ThreadExample  
+{  
+    public static void Main()  
+    {  
+        Console.WriteLine("Start of Main");  
+        MyThread mt = new MyThread();  
+        Thread t1 = new Thread(new ThreadStart(mt.Thread1));  
+        Thread t2 = new Thread(new ThreadStart(mt.Thread1));  
+  
+        t1.Start();  
+        t2.Start();  
+        try  
+        {  
+            t1.Abort();  
+            t2.Abort();  
+        }  
+        catch (ThreadAbortException tae)  
+        {  
+            Console.WriteLine(tae.ToString());  
+        }  
+        Console.WriteLine("End of Main");  
+    }  
+}  
+Output:
+
+Output is unpredictable because thread may be in running state.
+
+Start of Main
+0
+End of Main
+
+
+
+
+
+
+
+
+C# Threading Example: Join() method
+It causes all the calling threads to wait until the current thread (joined thread) is terminated or completes its task.
+
+using System;  
+using System.Threading;  
+public class MyThread  
+{  
+    public void Thread1()  
+    {  
+        for (int i = 0; i < 5; i++)  
+        {  
+            Console.WriteLine(i);  
+            Thread.Sleep(200);  
+        }  
+    }  
+}  
+public class ThreadExample  
+{  
+    public static void Main()  
+    {  
+        MyThread mt = new MyThread();  
+        Thread t1 = new Thread(new ThreadStart(mt.Thread1));  
+        Thread t2 = new Thread(new ThreadStart(mt.Thread1));  
+        Thread t3 = new Thread(new ThreadStart(mt.Thread1));  
+        t1.Start();  
+        t1.Join();  
+        t2.Start();  
+        t3.Start();  
+    }  
+}  
+Output:
+
+0
+1
+2
+3
+4
+0
+0
+1
+1
+2
+2
+3
+3
+4
+4
+
+C# Threading Example: ThreadPriority
+Let's see an example where we are changing the priority of the thread. The high priority thread can be executed first. But it is not guaranteed because thread is highly system dependent. It increases the chance of the high priority thread to execute before low priority thread.
+
+using System;  
+using System.Threading;  
+public class MyThread  
+{  
+    public void Thread1()  
+    {  
+        Thread t = Thread.CurrentThread;  
+        Console.WriteLine(t.Name+" is running");  
+    }  
+}  
+public class ThreadExample  
+{  
+    public static void Main()  
+    {  
+        MyThread mt = new MyThread();  
+        Thread t1 = new Thread(new ThreadStart(mt.Thread1));  
+        Thread t2 = new Thread(new ThreadStart(mt.Thread1));  
+        Thread t3 = new Thread(new ThreadStart(mt.Thread1));  
+        t1.Name = "Player1";  
+        t2.Name = "Player2";  
+        t3.Name = "Player3";  
+        t3.Priority = ThreadPriority.Highest;  
+        t2.Priority = ThreadPriority.Normal;  
+        t1.Priority = ThreadPriority.Lowest;  
+  
+        t1.Start();  
+        t2.Start();  
+        t3.Start();  
+    }  
+}  
+Output:
+
+The output is unpredictable because threads are highly system dependent. It may follow any algorithm preemptive or non-preemptive.
+
+Player1 is running
+Player3 is running
+Player2 is running
+
+
+
+
+
+
+C# Thread Synchronization
+Synchronization is a technique that allows only one thread to access the resource for the particular time. No other thread can interrupt until the assigned thread finishes its task.
+
+In multithreading program, threads are allowed to access any resource for the required execution time. Threads share resources and executes asynchronously. Accessing shared resources (data) is critical task that sometimes may halt the system. We deal with it by making threads synchronized.
+
+It is mainly used in case of transactions like deposit, withdraw etc.
+
+Advantage of Thread Synchronization
+Consistency Maintain
+No Thread Interference
+C# Lock
+We can use C# lock keyword to execute program synchronously. It is used to get lock for the current thread, execute the task and then release the lock. It ensures that other thread does not interrupt the execution until the execution finish.
+
+
+
+Here, we are creating two examples that executes asynchronously and synchronously.
+
+C# Example: Without Synchronization
+In this example, we are not using lock. This example executes asynchronously. In other words, there is context-switching between the threads.
+
+using System;  
+using System.Threading;  
+class Printer  
+{  
+    public void PrintTable()  
+    {  
+        for (int i = 1; i <= 10; i++)  
+        {  
+            Thread.Sleep(100);  
+            Console.WriteLine(i);  
+        }  
+    }  
+}  
+class Program  
+{  
+    public static void Main(string[] args)  
+    {  
+        Printer p = new Printer();  
+        Thread t1 = new Thread(new ThreadStart(p.PrintTable));  
+        Thread t2 = new Thread(new ThreadStart(p.PrintTable));  
+        t1.Start();  
+        t2.Start();  
+    }  
+}  
+Output:
+
+1
+1
+2
+2
+3
+3
+4
+4
+5
+5
+6
+6
+7
+7
+8
+8
+9
+9
+10
+10
+C# Thread Synchronization Example
+In this example, we are using lock. This example executes synchronously. In other words, there is no context-switching between the threads. In the output section, we can see that second thread starts working after first threads finishes its tasks.
+
+using System;  
+using System.Threading;  
+class Printer  
+{  
+    public void PrintTable()  
+    {  
+        lock (this)  
+        {  
+            for (int i = 1; i <= 10; i++)  
+            {  
+                Thread.Sleep(100);  
+                Console.WriteLine(i);  
+            }  
+        }  
+    }  
+}  
+class Program  
+{  
+    public static void Main(string[] args)  
+    {  
+        Printer p = new Printer();  
+        Thread t1 = new Thread(new ThreadStart(p.PrintTable));  
+        Thread t2 = new Thread(new ThreadStart(p.PrintTable));  
+        t1.Start();  
+        t2.Start();  
+    }  
+}  
+Output:
+
+
+
+
+
+*** Difference Between Join And Lock ****
+
+
+11
+
+Lock is a monitor which is used to guarantee that only 1 thread can execute at a time.
+
+lock(myobj)
+{
+   // only 1 thread here
+}
+Join is used to wait for a thread to complete, before execution continues.
+
+anotherThread.Join();
+// execution here only when anotherThread is complete
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+
