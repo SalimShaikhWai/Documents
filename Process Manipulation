@@ -1,0 +1,14 @@
+
+
+Process is class using that you can create or manimulation of process
+
+
+Metods Of process:
+Process.Start()
+Process.GetProcessByName()
+
+Process.GetCurrentprocess()
+process.GetProcessById()
+process.GetProcess()
+
+
